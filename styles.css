@@ -433,8 +433,33 @@ body::after {
   white-space: nowrap;
 }
 
+/* Close: top right, only once pinned by a click. */
 .case__close {
-  display: none;
+  top: calc(16 * var(--u));
+  right: calc(16 * var(--u));
+  padding: calc(6 * var(--u)) calc(12 * var(--u));
+  border: 0;
+  background: #000;
+  color: #fff;
+  font-family: "Geist Mono", monospace;
+  font-size: calc(14 * var(--u));
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.3s var(--ease);
+}
+
+.case__close:hover,
+.case__close:focus-visible {
+  background: #fff;
+  color: #000;
+  outline: 1px solid #000;
+}
+
+.is-pinned .case.is-open .case__close {
+  pointer-events: auto;
+}
+
+.hero:not(.is-pinned) .case__close {
+  visibility: hidden;
 }
 
 .case.is-open .case__title {
@@ -658,7 +683,7 @@ body::after {
 
   .poster--4,
   .card--4 {
-    left: calc(232 * var(--x));
+    left: calc(246 * var(--x));
     top: calc(186 * var(--y));
     width: calc(140 * var(--u));
     height: calc(187 * var(--u));
@@ -672,7 +697,8 @@ body::after {
 
   .name {
     left: 0;
-    bottom: calc(4 * var(--u));
+    /* Baseline sits ~0.054em above line box (Gloock descent 0.254em - 0.2em half-leading). */
+    bottom: calc(-7 * var(--u));
     flex-direction: column;
     align-items: stretch;
     padding: 0 calc(14 * var(--x));
@@ -729,6 +755,7 @@ body::after {
   .case__close {
     display: block;
     order: -3;
+    right: auto;
     justify-self: end;
     padding: 8px 14px;
     border: 0;

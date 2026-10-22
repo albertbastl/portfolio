@@ -64,7 +64,7 @@ const PROJECTS = {
     thinking: "Purple taken from the established branding, set on dark for a modern web3 feel. The word is split into parts, like segments.",
     outcome: "Full brand redesign, new X and website graphics, pitch deck branding. Won best presentation at Build Station 2026 hackathon.",
     // Loose scatter around the poster (837–1019 × 56–300), staggered edges; right side runs lower (title only spans the left).
-    layout: { info: 60, slots: [[580, 36], [1056, 60], [570, 290], [900, 380], [1140, 352]] },
+    layout: { info: 60, slots: [[580, 36], [1056, 80], [570, 290], [900, 380], [1140, 352]] },
     gallery: [
       // Phone: X + S squares side by side, then wordmark banner, deck, palette strip.
       { size: [220, 214], m: [200, 200], src: "assets/segmento-x.jpg" },

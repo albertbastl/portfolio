@@ -1,7 +1,8 @@
 // Case preview: hover a poster (~120 ms intent) → white veil, poster lifts in place,
 // its case fades in: text on the half opposite the poster,
 // 6 graphics clustered around the poster, giant title at the bottom. Stays open only while over the poster.
-// Click/tap pins it open (until click elsewhere, Esc or close). Keyboard focus mirrors hover.
+// Click/tap pins it open (until click elsewhere, Esc or close); while pinned, hovering others does nothing.
+// Keyboard focus mirrors hover.
 // Portrait (styles.css): case becomes a scrollable full-screen sheet.
 (() => {
   const hero = document.querySelector(".hero");
@@ -56,11 +57,13 @@
     clearTimeout(timer);
     if (active === poster) {
       pinned ||= pin;
+      hero.classList.toggle("is-pinned", pinned);
       return;
     }
     close();
     active = poster;
     pinned = pin;
+    hero.classList.toggle("is-pinned", pinned);
     cases[poster.dataset.project].scrollTop = 0;
     hero.classList.add("is-casing");
     poster.classList.add("is-active");
@@ -70,7 +73,7 @@
   const close = () => {
     clearTimeout(timer);
     if (!active) return;
-    hero.classList.remove("is-casing");
+    hero.classList.remove("is-casing", "is-pinned");
     active.classList.remove("is-active");
     cases[active.dataset.project].classList.remove("is-open");
     active = null;
@@ -84,7 +87,7 @@
     poster.setAttribute("aria-describedby", `case-${poster.dataset.project}`);
 
     poster.addEventListener("pointerenter", (e) => {
-      if (e.pointerType !== "mouse") return;
+      if (e.pointerType !== "mouse" || pinned) return;
       clearTimeout(timer);
       timer = setTimeout(() => open(poster), INTENT);
     });
@@ -94,7 +97,7 @@
       if (active === poster && !pinned) close();
     });
     poster.addEventListener("click", () => (active === poster && pinned ? close() : open(poster, true)));
-    poster.addEventListener("focus", () => poster.matches(":focus-visible") && open(poster));
+    poster.addEventListener("focus", () => !pinned && poster.matches(":focus-visible") && open(poster));
     poster.addEventListener("blur", () => active === poster && !pinned && close());
   }
 
