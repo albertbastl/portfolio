@@ -683,7 +683,8 @@ body::after {
 
   .poster--4,
   .card--4 {
-    left: calc(246 * var(--x));
+    /* Mirrors poster--1: same gap to the right edge. */
+    left: calc(100% - 18 * var(--x) - 140 * var(--u));
     top: calc(186 * var(--y));
     width: calc(140 * var(--u));
     height: calc(187 * var(--u));
