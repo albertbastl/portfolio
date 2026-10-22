@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>albert bastl</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Gloock&family=Geist:wght@600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="hero">
+    <img class="portrait" src="assets/portrait.png" alt="Blurred portrait of Albert Bastl">
+
+    <img class="poster poster--1" src="assets/poster-1.png" alt="Build Station poster" data-project="build-station">
+    <img class="poster poster--2" src="assets/poster-2.png" alt="naskalu.cz poster" data-project="na-skalu">
+    <img class="poster poster--3" src="assets/poster-3.png" alt="Forest spirit poster" data-project="forest-spirit">
+    <img class="poster poster--4" src="assets/poster-4.png" alt="Segmento poster" data-project="segmento">
+
+    <!-- Poster backs: same slots as posters, revealed by flip (flip.js). -->
+    <section class="card card--1 card--dark" aria-label="About" inert>
+      <span class="card__label">about</span>
+      <p class="card__big">albert bastl, ux/ui developer from prague.</p>
+      <span class="card__small">b. 2004</span>
+    </section>
+    <section class="card card--2" aria-label="Now" inert>
+      <span class="card__label">now</span>
+      <p class="card__mono">open for work</p>
+      <span class="card__dot" aria-hidden="true"></span>
+    </section>
+    <section class="card card--3" aria-label="Motto" inert>
+      <blockquote class="card__motto">“do what excites, follow heart”</blockquote>
+    </section>
+    <section class="card card--4 card--dark" aria-label="Contact" inert>
+      <span class="card__label">contact</span>
+      <a class="card__big" href="mailto:albert.bastl@protonmail.com">albert.bastl<br>@protonmail<br>.com ↗</a>
+      <span class="card__small">
+        <a href="https://instagram.com/albertbastl" target="_blank" rel="noopener">ig @albertbastl</a> ·
+        <a href="https://www.are.na/albert-bastl" target="_blank" rel="noopener">are.na</a>
+      </span>
+    </section>
+
+    <button class="about-btn" type="button" aria-pressed="false">interested ??</button>
+
+    <h1 class="name">
+      <span>albert</span>
+      <span>bastl</span>
+    </h1>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="projects.js"></script>
+  <script src="preview.js"></script>
+  <script src="flip.js"></script>
+</body>
+</html>

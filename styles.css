@@ -1,0 +1,806 @@
+/* Design frame: 1440 x 820. --x/--y = 1 design px scaled to viewport width/height,
+   --u = the smaller of the two (used for sizes so content always fits). */
+:root {
+  --vh: 100vh;
+  --x: calc(100vw / 1440);
+  --y: calc(var(--vh) / 820);
+  --u: min(var(--x), var(--y));
+  --c: var(--u);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --vh: 100dvh;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  background: #fff;
+  color: #000;
+}
+
+/* Film grain over whole page, matches portrait noise. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+}
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: var(--vh);
+  overflow: hidden;
+}
+
+.hero img {
+  position: absolute;
+  display: block;
+  object-fit: cover;
+}
+
+.portrait {
+  left: calc(50% - 442 * var(--u));
+  top: calc(14 * var(--y));
+  width: calc(776 * var(--u));
+  height: calc(1164 * var(--u));
+}
+
+/* Posters + their backs (.card) flip on Y; `scale` is separate so hover stays snappy.
+   --i staggers the flip per slot. */
+.poster,
+.card {
+  box-shadow: 12px 18px 34px rgba(0, 0, 0, 0.16);
+  backface-visibility: hidden;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.25, 1) calc(var(--i, 0) * 60ms),
+    scale 0.3s ease;
+}
+
+/* z-index steps down after the veil fades so a closing poster isn't swallowed by it. */
+.poster {
+  transform: perspective(1200px) rotateY(0);
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.25, 1) calc(var(--i, 0) * 60ms),
+    scale 0.4s var(--ease), box-shadow 0.4s var(--ease), opacity 0.4s var(--ease),
+    z-index 0s 0.4s;
+}
+
+.poster:hover {
+  scale: 1.04;
+}
+
+.card {
+  transform: perspective(1200px) rotateY(180deg);
+}
+
+.is-flipped .poster {
+  transform: perspective(1200px) rotateY(-180deg);
+}
+
+.is-flipped .card {
+  transform: perspective(1200px) rotateY(0);
+}
+
+.poster--1,
+.card--1 {
+  --i: 1;
+  left: calc(80 * var(--x));
+  top: calc(134 * var(--y));
+  width: calc(192 * var(--u));
+  height: calc(256 * var(--u));
+}
+
+.poster--2,
+.card--2 {
+  --i: 2;
+  left: calc(405 * var(--x));
+  top: calc(86 * var(--y));
+  width: calc(110 * var(--u));
+  height: calc(147 * var(--u));
+}
+
+.poster--3,
+.card--3 {
+  --i: 4;
+  left: calc(1251 * var(--x));
+  top: calc(298 * var(--y));
+  width: calc(110 * var(--u));
+  height: calc(146 * var(--u));
+}
+
+.poster--4,
+.card--4 {
+  --i: 3;
+  left: calc(951 * var(--x));
+  top: calc(71 * var(--y));
+  width: calc(194 * var(--u));
+  height: calc(259 * var(--u));
+}
+
+/* Info cards (poster backs). */
+.card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(16 * var(--c));
+  background: #fff;
+  color: #000;
+  font-family: "Geist Mono", monospace;
+  font-size: calc(11 * var(--c));
+  line-height: 1.15;
+}
+
+.card--dark {
+  background: #000;
+  color: #fff;
+}
+
+.card a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card a:hover,
+.card a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  outline: 0;
+}
+
+.card__label {
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.card__big {
+  font-family: "Gloock", serif;
+  font-size: calc(26 * var(--c));
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.card--3 {
+  justify-content: center;
+}
+
+/* Quote marks hang outside so the text block stays centred. */
+.card__motto {
+  font-family: "Gloock", serif;
+  font-size: calc(18 * var(--c));
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+  hanging-punctuation: first last;
+}
+
+.card--4 .card__big {
+  font-size: calc(24 * var(--c));
+}
+
+.card--2,
+.card--3 {
+  padding: calc(9 * var(--c));
+}
+
+.card__dot {
+  width: calc(7 * var(--c));
+  height: calc(7 * var(--c));
+  border-radius: 50%;
+  background: #000;
+  animation: card-blink 1.6s steps(1) infinite;
+}
+
+@keyframes card-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.about-btn {
+  position: absolute;
+  border: 0;
+  cursor: pointer;
+  left: calc(665.5 * var(--x));
+  top: calc(288 * var(--y));
+  transform: translateX(-50%);
+  padding: calc(10 * var(--u)) calc(20 * var(--u));
+  background: #000;
+  color: #fff;
+  font-family: "Geist Mono", monospace;
+  font-weight: 400;
+  font-size: calc(26 * var(--u));
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.about-btn:hover,
+.about-btn:focus-visible {
+  background: #fff;
+  color: #000;
+  outline: 1px solid #000;
+}
+
+.name {
+  position: absolute;
+  left: calc(-3 * var(--x));
+  /* Frame is ~269 tall at y=608, bleeds ~57 past bottom edge. */
+  bottom: calc(-57 * var(--u));
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 calc(28 * var(--x));
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-size: calc(224 * var(--u));
+  line-height: normal;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  /* White + difference = black on bg, white over dark shirt. */
+  color: #fff;
+  mix-blend-mode: difference;
+}
+
+/* Custom cursor: inverting lens trailing a dot that turns yellow over links/posters.
+   Only on mouse devices; script.js adds .has-cursor. */
+.cursor-lens,
+.cursor-dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.has-cursor .cursor-lens,
+.has-cursor .cursor-dot {
+  opacity: 1;
+}
+
+.cursor-lens {
+  z-index: 15;
+  width: 90px;
+  height: 90px;
+  margin: -45px 0 0 -45px;
+  -webkit-backdrop-filter: invert(1) contrast(1.3);
+  backdrop-filter: invert(1) contrast(1.3);
+  transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease, margin 0.3s ease;
+}
+
+.cursor-lens.is-active {
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+}
+
+.cursor-dot {
+  z-index: 20;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  background: #fff;
+  mix-blend-mode: difference;
+  transition: opacity 0.3s ease, background 0.2s ease, width 0.2s ease, height 0.2s ease,
+    margin 0.2s ease;
+}
+
+/* Hoverable: dot grows. */
+.cursor-dot.is-active {
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+}
+
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+
+
+/* ---------- Case preview ----------
+   preview.js: hovering (only) a poster adds .is-casing to .hero, .is-active to the poster,
+   .is-open to its .case. White veil (5) < active poster (6) < case content (7) < grain (10).
+   --p = 1 px of the 1276-wide brief frame the case layout was drawn in. */
+.hero {
+  --p: calc(var(--u) * 1440 / 1276);
+}
+
+.case-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease);
+}
+
+.is-casing .case-veil {
+  opacity: 1;
+}
+
+.is-casing .poster:not(.is-active) {
+  opacity: 0;
+}
+
+.poster.is-active {
+  z-index: 6;
+  scale: 1.06;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.22);
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.25, 1) calc(var(--i, 0) * 60ms),
+    scale 0.4s var(--ease), box-shadow 0.4s var(--ease), opacity 0.4s var(--ease), z-index 0s;
+}
+
+/* Never steals hover from the poster. Closing: quick fade, no stagger. */
+.case > * {
+  position: absolute;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.case.is-open > * {
+  opacity: 1;
+  transform: none;
+  transition-duration: 0.6s;
+}
+
+.case__info {
+  width: calc(480 * var(--p));
+  transform: translateY(calc(12 * var(--p)));
+  color: #111;
+  font-family: "Geist Mono", monospace;
+  font-size: calc(18 * var(--p));
+  line-height: 1.45;
+}
+
+.case.is-open .case__info {
+  transition-delay: 0.2s;
+}
+
+.case__meta {
+  color: #666;
+  font-size: calc(13 * var(--p));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.case__who {
+  margin-top: calc(18 * var(--p));
+  color: #777;
+  font-size: calc(13 * var(--p));
+}
+
+/* Labels stacked above each paragraph so the text column stays wide. */
+.case__text dt {
+  margin-top: calc(24 * var(--p));
+  color: #888;
+  font-size: calc(13 * var(--p));
+}
+
+.case__text dd {
+  margin-top: calc(4 * var(--p));
+}
+
+.case__g {
+  overflow: hidden;
+  box-shadow: 12px 18px 34px rgba(0, 0, 0, 0.16);
+  transform: translateY(calc(16 * var(--p)));
+  /* Mockup sizes below are in em: 1em = 10 brief px. */
+  font-size: calc(10 * var(--p));
+}
+
+.case.is-open .case__g {
+  transition-delay: var(--d);
+}
+
+.case__g > img {
+  inset: 0;
+  object-position: top;
+  width: 100%;
+  height: 100%;
+}
+
+.case__title {
+  left: calc(52 * 1440 / 1276 * var(--x));
+  bottom: calc(-24 * var(--p));
+  transform: translateY(calc(30 * var(--p)));
+  color: #111;
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  font-size: calc(168 * var(--p));
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.case__close {
+  display: none;
+}
+
+.case.is-open .case__title {
+  transition-delay: 0.1s;
+}
+
+/* Gallery mockups (stand-ins until real assets land). */
+.g-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.4em;
+  overflow: hidden;
+}
+
+.g-sans {
+  position: relative;
+  font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.g-serif {
+  position: relative;
+  font-family: "Gloock", serif;
+  font-weight: 400;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+}
+
+.g-mono {
+  position: relative;
+  font-family: "Geist Mono", monospace;
+  font-size: 1em;
+  line-height: 1.3;
+}
+
+.g-tiles {
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+  height: 100%;
+}
+
+.g-tiles i {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.4em;
+  font-size: 1.8em;
+  font-style: normal;
+}
+
+.g-swatches {
+  display: flex;
+  gap: 0.6em;
+}
+
+.g-swatches i {
+  width: 2.6em;
+  height: 2.6em;
+}
+
+
+.g-badge {
+  display: grid;
+  grid-template-rows: 35% 1fr 13%;
+  height: 100%;
+}
+
+.g-badge b {
+  display: flex;
+  padding: 0.8em;
+  font-size: 1.3em;
+}
+
+.g-badge b:first-child {
+  align-items: flex-end;
+}
+
+.g-badge b:last-child {
+  align-items: center;
+}
+
+
+
+
+
+.g-lines {
+  line-height: 1;
+}
+
+.g-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 1em;
+  height: 11.6em;
+}
+
+.g-bars i {
+  flex: 1;
+  background: #9a7cf2;
+}
+
+/* Segmento: slit at 60% — top piece clipped above, segment below. */
+.g-cut {
+  position: relative;
+  display: block;
+  font-family: "Geist", sans-serif;
+  font-size: 3.15em;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+
+.g-cut > span {
+  display: block;
+  clip-path: inset(-30% 0 40% 0);
+}
+
+.g-cut > span + span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: inset(64% 0 -30% 0);
+}
+
+.g-cut--s {
+  line-height: 1;
+  letter-spacing: 0;
+  transform: translateY(-0.087em);
+}
+
+.g-palette {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-size: 0.85em;
+}
+
+.g-palette i {
+  padding: 0.7em;
+  font-style: normal;
+}
+
+.g-palette--row {
+  flex-direction: row;
+  font-size: 0.75em;
+}
+
+.g-palette--row i {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  padding: 0.6em;
+}
+
+/* Photos: image fills the frame, caption chip bottom-left. */
+.g-photo {
+  justify-content: flex-end;
+  padding: 1em;
+}
+
+.case__g .g-photo img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.g-cap {
+  align-self: flex-start;
+  padding: 0.3em 0.6em;
+  background: #111;
+  color: #fff;
+  font-size: 0.9em;
+}
+
+/* ---------- Portrait / mobile ----------
+   Own design frame: 390 x 844. Posters ring the head, name stacks at the bottom.
+   Posters shrink less than the frame, so card internals use --c (0.8 of --u). */
+@media (orientation: portrait) {
+  :root {
+    --x: calc(100vw / 390);
+    --y: calc(var(--vh) / 844);
+    --c: calc(var(--u) * 0.8);
+  }
+
+  .portrait {
+    left: calc(50% - 311 * var(--u));
+    top: calc(120 * var(--y));
+    width: calc(560 * var(--u));
+    height: calc(840 * var(--u));
+  }
+
+  .poster--1,
+  .card--1 {
+    left: calc(18 * var(--x));
+    top: calc(110 * var(--y));
+    width: calc(140 * var(--u));
+    height: calc(187 * var(--u));
+  }
+
+  .poster--2,
+  .card--2 {
+    left: calc(172 * var(--x));
+    top: calc(48 * var(--y));
+    width: calc(84 * var(--u));
+    height: calc(112 * var(--u));
+  }
+
+  .poster--3,
+  .card--3 {
+    left: calc(24 * var(--x));
+    top: calc(470 * var(--y));
+    width: calc(84 * var(--u));
+    height: calc(112 * var(--u));
+  }
+
+  .poster--4,
+  .card--4 {
+    left: calc(232 * var(--x));
+    top: calc(186 * var(--y));
+    width: calc(140 * var(--u));
+    height: calc(187 * var(--u));
+  }
+
+  .about-btn {
+    left: 50%;
+    top: calc(400 * var(--y));
+    font-size: calc(18 * var(--u));
+  }
+
+  .name {
+    left: 0;
+    bottom: calc(4 * var(--u));
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 calc(14 * var(--x));
+    font-size: calc(130 * var(--u));
+    line-height: 0.8;
+  }
+
+  .name span:last-child {
+    align-self: flex-end;
+  }
+
+  /* Case: full-screen scrollable sheet instead of the wide-frame layout.
+     Title, info, then a 2-col gallery (wide slots span both, see preview.js fit()). */
+  .case {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-flow: dense;
+    align-content: start;
+    gap: 12px;
+    padding: 20px 18px 48px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--ease), visibility 0s 0.3s;
+  }
+
+  .case.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.4s var(--ease);
+  }
+
+  .case > * {
+    position: relative;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto;
+    width: auto !important;
+    height: auto !important;
+    pointer-events: auto;
+  }
+
+  .case__close,
+  .case__title,
+  .case__info {
+    grid-column: 1 / -1;
+  }
+
+  .case__close {
+    display: block;
+    order: -3;
+    justify-self: end;
+    padding: 8px 14px;
+    border: 0;
+    background: #000;
+    color: #fff;
+    font-family: "Geist Mono", monospace;
+    font-size: 14px;
+  }
+
+  .case__title {
+    order: -2;
+    margin-top: 8px;
+    font-size: min(64px, 16vw);
+    white-space: normal;
+  }
+
+  .case__info {
+    order: -1;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .case__meta,
+  .case__who,
+  .case__text dt {
+    font-size: 12px;
+  }
+
+  /* Mockups are drawn in em at 10 per slot px: rescale to the column width. */
+  .case__g {
+    --cols: 2;
+    --col: calc((100vw - 36px - 12px * (var(--cols) - 1)) / var(--cols));
+    height: calc(var(--col) * var(--h) / var(--w)) !important;
+    font-size: calc(var(--col) / var(--w) * 10);
+  }
+
+  /* Vertical palettes lie flat as a strip. */
+  .case .g-palette {
+    flex-direction: row;
+  }
+
+  .case .g-palette i {
+    display: flex;
+    flex-basis: 0;
+    align-items: flex-end;
+  }
+}
+
+/* Opacity only: no flip, scale or slide. */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .poster {
+    transition: opacity 0.4s var(--ease), z-index 0s 0.4s;
+  }
+
+  .poster.is-active {
+    transition: opacity 0.4s var(--ease), z-index 0s;
+  }
+
+  .poster:hover,
+  .poster.is-active {
+    scale: none;
+  }
+
+  .card__dot {
+    animation: none;
+  }
+
+  .case > * {
+    transform: none;
+  }
+}
