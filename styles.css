@@ -171,8 +171,13 @@ body::after {
   letter-spacing: -0.01em;
 }
 
+/* Label on top, quote centred in the space below. */
 .card--3 {
-  justify-content: center;
+  justify-content: flex-start;
+}
+
+.card--3 .card__motto {
+  margin-block: auto;
 }
 
 /* Quote marks hang outside so the text block stays centred. */
